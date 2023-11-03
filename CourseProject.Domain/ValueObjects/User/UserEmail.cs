@@ -8,6 +8,7 @@ public sealed class UserEmail : ValueObject
 {
     public const int MaxLength = 255;
 
+    [Newtonsoft.Json.JsonConstructor]
     private UserEmail(string value)
     {
         Value = value;
@@ -45,4 +46,6 @@ public sealed class UserEmail : ValueObject
     {
         yield return Value;
     }
+
+    public static implicit operator string(UserEmail userEmail) => userEmail.Value;
 }

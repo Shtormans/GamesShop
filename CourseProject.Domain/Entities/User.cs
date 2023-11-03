@@ -1,7 +1,7 @@
-﻿using CourseProject.Domain.Enums;
-using CourseProject.Domain.Primitives;
+﻿using CourseProject.Domain.Primitives;
 using CourseProject.Domain.ValueObjects.Identificators;
 using CourseProject.Domain.ValueObjects.User;
+using Newtonsoft.Json;
 
 namespace CourseProject.Domain.Entities;
 
@@ -9,24 +9,33 @@ public sealed class User : Entity
 {
     private List<User> _friends;
     private List<Comment> _comments;
-    private List<Game> _games;
+    private List<Game> _library;
+    private List<Game> _createdGames;
 
-    public User(Guid id)
+    [Newtonsoft.Json.JsonConstructor]
+    private User(Guid id)
         : base(id)
     {
     }
 
+    [JsonProperty]
     public Username Username { get; private set; }
+    [JsonProperty]
     public UserEmail Email { get; private set; }
+    [JsonProperty] 
     public UserPassword Password { get; private set; }
+    [JsonProperty]
     public UserFirstName? FirstName { get; private set; }
+    [JsonProperty]
     public UserSecondName? SecondName { get; private set; }
-    public UserImage Image { get; private set; }
+    [JsonProperty]
+    public UserProfilePicture ProfilePicture { get; private set; }
+    [JsonProperty]
     public UserBirthday Birthday { get; private set; }
     public IReadOnlyList<User> Friends => _friends;
     public IReadOnlyList<Comment> Comments => _comments;
-    public IReadOnlyList<Game> Games => _games;
-    public Role Role { get; private set; }
+    public IReadOnlyList<Game> Library => _library;
+    public IReadOnlyList<Game> CreatedGames => _createdGames;
 
 
     public static User Create(
@@ -34,7 +43,7 @@ public sealed class User : Entity
                 UserEmail email,
                 UserPassword password,
                 UserBirthday birthday,
-                Role role,
+                UserProfilePicture userImage,
                 UserFirstName? firstName = null,
                 UserSecondName? secondName = null)
     {
@@ -46,7 +55,7 @@ public sealed class User : Entity
             Email = email,
             Password = password,
             Birthday = birthday, 
-            Role = role,
+            ProfilePicture = userImage,
             FirstName = firstName,
             SecondName = secondName
         };

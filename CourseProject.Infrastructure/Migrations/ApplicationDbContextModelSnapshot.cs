@@ -59,6 +59,9 @@ namespace CourseProject.Infrastructure.Migrations
                     b.Property<Guid>("AuthorId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -99,16 +102,13 @@ namespace CourseProject.Infrastructure.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
-                    b.Property<Guid>("Image")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<int>("Role")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ProfilePicture")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("SecondName")
                         .HasMaxLength(15)
@@ -128,6 +128,21 @@ namespace CourseProject.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Users", (string)null);
+                });
+
+            modelBuilder.Entity("GameUser", b =>
+                {
+                    b.Property<Guid>("LibraryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("LibraryId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Libraries", (string)null);
                 });
 
             modelBuilder.Entity("UserUser", b =>
@@ -163,12 +178,12 @@ namespace CourseProject.Infrastructure.Migrations
             modelBuilder.Entity("CourseProject.Domain.Entities.Game", b =>
                 {
                     b.HasOne("CourseProject.Domain.Entities.User", null)
-                        .WithMany("Games")
+                        .WithMany("CreatedGames")
                         .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.OwnsOne("Money", "Price", b1 =>
+                    b.OwnsOne("CourseProject.Domain.Entities.Game.Price#Money", "Price", b1 =>
                         {
                             b1.Property<Guid>("GameId")
                                 .HasColumnType("uniqueidentifier");
@@ -183,13 +198,28 @@ namespace CourseProject.Infrastructure.Migrations
 
                             b1.HasKey("GameId");
 
-                            b1.ToTable("Games");
+                            b1.ToTable("Games", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("GameId");
                         });
 
                     b.Navigation("Price")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("GameUser", b =>
+                {
+                    b.HasOne("CourseProject.Domain.Entities.Game", null)
+                        .WithMany()
+                        .HasForeignKey("LibraryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CourseProject.Domain.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -217,7 +247,7 @@ namespace CourseProject.Infrastructure.Migrations
                 {
                     b.Navigation("Comments");
 
-                    b.Navigation("Games");
+                    b.Navigation("CreatedGames");
                 });
 #pragma warning restore 612, 618
         }

@@ -8,12 +8,12 @@ internal sealed class UIManager
 {
     private static UIManager? _instance;
 
-    private readonly IMainForm _browser;
+    private readonly IMainForm _mainForm;
     private readonly ControllersCollection _controllers;
 
     public UIManager(IMainForm browser, ControllersCollection controllers)
     {
-        _browser = browser;
+        _mainForm = browser;
         _controllers = controllers;
 
         _instance = this;
@@ -23,7 +23,7 @@ internal sealed class UIManager
     {
         get
         {
-            if (_instance == null)
+            if (_instance is null)
             {
                 throw new NotImplementedException();
             }
@@ -34,15 +34,15 @@ internal sealed class UIManager
 
     public async Task ShowView(string controllerName, string methodName = "Index", object?[]? parameters = null)
     {
-        _browser.WaitCursor(true).Start();
+        await _mainForm.WaitCursor(true);
 
         object? result = await UseMethodAsync(controllerName, methodName, parameters);
 
         var view = (BaseView)result!;
 
-        await _browser.ShowView(view);
+        await _mainForm.ShowView(view);
 
-        _browser.WaitCursor(false).Start();
+        await _mainForm.WaitCursor(false);
     }
 
     public async Task<object?> UseMethodAsync(string controllerName, string methodName, object?[]? parameters = null)
@@ -58,8 +58,18 @@ internal sealed class UIManager
         return result;
     }
 
+    public async Task ShowErrorMessage(string message)
+    {
+        await _mainForm.ShowErrorMessage(message);
+    }
+
     public async Task ChangeUISettings(BrowserSettings settings)
     {
-        await _browser.ChangeSettings(settings);
+        await _mainForm.ChangeSettings(settings);
+    }
+
+    public async Task<string?> OpenFileDialog(string filter)
+    {
+        return await _mainForm.OpenFileDialog(filter);
     }
 }

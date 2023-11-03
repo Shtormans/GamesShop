@@ -7,6 +7,7 @@ public sealed class UserSecondName : ValueObject
 {
     public const int MaxLength = 15;
 
+    [Newtonsoft.Json.JsonConstructor]
     private UserSecondName(string value)
     {
         Value = value;

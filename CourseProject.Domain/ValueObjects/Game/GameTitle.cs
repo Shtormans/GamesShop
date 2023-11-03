@@ -37,4 +37,6 @@ public sealed class GameTitle : ValueObject
     {
         yield return Value;
     }
+
+    public static implicit operator string(GameTitle gameTitle) => gameTitle.Value;
 }

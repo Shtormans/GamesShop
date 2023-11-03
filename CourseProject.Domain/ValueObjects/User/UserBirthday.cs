@@ -6,6 +6,7 @@ namespace CourseProject.Domain.ValueObjects.User;
 
 public sealed class UserBirthday : ValueObject
 {
+    [Newtonsoft.Json.JsonConstructor]
     private UserBirthday(DateTime date)
     {
         DateInUTC = date;

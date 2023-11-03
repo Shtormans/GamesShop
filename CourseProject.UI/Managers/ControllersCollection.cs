@@ -16,7 +16,7 @@ internal sealed class ControllersCollection
 			.Select(type => (BaseController)provider.GetRequiredService(type))
 			.ToDictionary(controller => controller.GetType().Name);
 	}
-
+	
 	public BaseController this[string controllerName]
 	{
 		get

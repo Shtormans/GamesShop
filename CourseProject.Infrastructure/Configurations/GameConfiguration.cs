@@ -21,6 +21,11 @@ internal class GameConfiguration : IEntityTypeConfiguration<Game>
             .HasMaxLength(GameTitle.MaxLength)
             .IsRequired();
 
+        builder.Property(game => game.CreationDate).HasConversion(
+            creationDate => creationDate.DateInUTC,
+            value => GameCreationDate.Create(value).Value)
+            .IsRequired();
+
         builder.Property(game => game.Description).HasConversion(
             description => description.Value,
             value => GameDescription.Create(value).Value)
@@ -28,7 +33,7 @@ internal class GameConfiguration : IEntityTypeConfiguration<Game>
 
         builder.Property(game => game.Image).HasConversion(
             image => image.Id,
-            value => GameImage.Create(value).Value)
+            value => GameIcon.Create(value).Value)
             .IsRequired();
 
         builder.OwnsOne(game => game.Price, priceBuilder =>

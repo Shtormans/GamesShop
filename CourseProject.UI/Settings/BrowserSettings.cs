@@ -8,4 +8,5 @@ public class BrowserSettings
     public Size? ScreenSize { get; set; }
     public SizeMode? SizeMode { get; set; }
     public Color? BackgroundColor { get; set; }
+    public bool? IsLocked { get; set; }
 }

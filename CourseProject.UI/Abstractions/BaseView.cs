@@ -2,7 +2,7 @@
 
 namespace CourseProject.UI.Abstractions;
 
-internal abstract class BaseView : GroupBox
+internal abstract class BaseView : Panel
 {
     protected readonly dynamic ViewBag;
 
@@ -13,8 +13,5 @@ internal abstract class BaseView : GroupBox
         InitializeComponent();
     }
 
-    private void InitializeComponent()
-    {
-        this.Dock = DockStyle.Fill;
-    }
+    protected abstract void InitializeComponent();
 }

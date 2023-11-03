@@ -27,7 +27,7 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(user => user.Password).HasConversion(
             password => password.Value,
-            value => UserPassword.Create(value).Value)
+            value => UserPassword.CreateWithoutEncryption(value).Value)
             .HasMaxLength(UserPassword.MaxLength)
             .IsRequired();
 
@@ -46,25 +46,27 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
             value => UserBirthday.Create(value).Value)
             .IsRequired();
 
-        builder.Property(user => user.Image).HasConversion(
-            image => image.Id,
-            value => UserImage.Create(value).Value);
+        builder.Property(user => user.ProfilePicture).HasConversion(
+            image => image!.Id,
+            value => UserProfilePicture.Create(value).Value);
 
-        builder.Property(user => user.Role)
-            .HasConversion<int>()
-            .IsRequired();
-
-        builder.HasMany(user => user.Games)
-            .WithOne()
-            .HasForeignKey(game => game.AuthorId);
+        builder.HasMany(user => user.Library)
+            .WithMany()
+            .UsingEntity(builder => builder.ToTable("Libraries"));
 
         builder.HasMany(user => user.Friends)
             .WithMany()
+        
             .UsingEntity(builder => builder.ToTable("Friends"));
 
         builder.HasMany(user => user.Comments)
             .WithOne()
             .HasForeignKey(comment => comment.AuthorId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        builder.HasMany(user => user.CreatedGames)
+            .WithOne()
+            .HasForeignKey(game => game.AuthorId)
             .OnDelete(DeleteBehavior.NoAction);
 
         builder.HasIndex(user => user.Username).IsUnique();

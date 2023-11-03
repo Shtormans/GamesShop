@@ -1,5 +1,6 @@
 ﻿using CourseProject.Domain.Primitives;
 using CourseProject.Domain.Shared;
+using CourseProject.Domain.ValueObjects.Game;
 
 namespace CourseProject.Domain.ValueObjects.Comment;
 
@@ -33,4 +34,6 @@ public sealed class CommentCreationDate : ValueObject
     {
         yield return DateInUTC;
     }
+
+    public static implicit operator DateTime(CommentCreationDate gameCreationDate) => gameCreationDate.DateInUTC;
 }

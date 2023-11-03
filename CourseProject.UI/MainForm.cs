@@ -1,6 +1,7 @@
-﻿using CourseProject.UI.Abstractions;
-using CourseProject.UI.Settings;
+﻿
+using CourseProject.UI.Abstractions;
 using CourseProject.UI.Enums;
+using CourseProject.UI.Settings;
 
 namespace CourseProject.UI;
 
@@ -42,12 +43,24 @@ internal partial class MainForm : Form, IMainForm
             {
                 this.Size = settings.ScreenSize.Value;
             }
+
+            if (settings.IsLocked is not null)
+            {
+                if (settings.IsLocked.Value)
+                {
+                    this.FormBorderStyle = FormBorderStyle.FixedSingle;
+                }
+                else
+                {
+                    this.FormBorderStyle = FormBorderStyle.Sizable;
+                }
+            }
         });
     }
 
     public async Task WaitCursor(bool wait)
     {
-        throw new NotImplementedException();
+        this.UseWaitCursor = wait;
     }
 
     public async Task ShowView(BaseView view)
@@ -58,5 +71,39 @@ internal partial class MainForm : Form, IMainForm
 
             this.Controls.Add(view);
         });
+    }
+
+    public async Task ShowErrorMessage(string message)
+    {
+        this.Invoke(() =>
+        {
+            MessageBox.Show(message);
+        });
+    }
+
+    public async Task<string?> OpenFileDialog(string filter)
+    {
+        string? result = null;
+
+        Thread t = new Thread(() => {
+            OpenFileDialog saveFileDialog1 = new OpenFileDialog();
+
+            saveFileDialog1.Filter = filter;
+
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                result = saveFileDialog1.FileName;
+            }
+            else
+            {
+                result = null;
+            }
+        });
+
+        t.SetApartmentState(ApartmentState.STA);
+        t.Start();
+        t.Join();
+
+        return result;
     }
 }

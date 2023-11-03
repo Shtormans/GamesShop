@@ -8,9 +8,9 @@ internal abstract class BaseController
     protected readonly ISender Sender;
     protected readonly dynamic ViewBag;
 
-    protected BaseController(ISender sender, ViewBag viewBag)
+    protected BaseController(ISender sender)
     {
         Sender = sender;
-        ViewBag = viewBag;
+        ViewBag = new ViewBag();
     }
 }

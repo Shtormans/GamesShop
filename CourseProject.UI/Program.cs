@@ -1,24 +1,28 @@
 using CourseProject.Infrastructure;
 using CourseProject.UI.Abstractions;
 using CourseProject.UI.Managers;
-using CourseProject.UI.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Diagnostics;
 
 namespace CourseProject.UI;
 
 internal static class Program
 {
-    [STAThread]
-    static void Main()
+    static async Task Main()
     {
         var host = CreateHostBuilder();
 
         ApplicationConfiguration.Initialize();
-        System.Windows.Forms.Application.Run(host.Services.GetRequiredService<IMainForm>() as Form);
+
+        host.Services.GetRequiredService<UIManager>();
+        host.Services.GetRequiredService<CurrentSessionContoller>();
+
+        //System.Windows.Forms.Application.Run(new TestForm());
+        await host.Services.GetRequiredService<Startup>().Run();
     }
 
     private static IHost CreateHostBuilder()
@@ -59,14 +63,18 @@ internal static class Program
                 .FromCallingAssembly()
                 .AddClasses(classes => classes.AssignableTo<BaseController>())
                 .AsSelf()
-                .WithSingletonLifetime());
+                .WithScopedLifetime());
 
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Application.AssemblyReference.Assembly));
 
         services
-            .AddScoped<ViewBag>()
-            .AddSingleton<IMainForm, MainForm>()
-            .AddSingleton<UIManager>()
-            .AddSingleton(provider => new ControllersCollection(provider));
+            .AddScoped<IMainForm, MainForm>()
+            .AddScoped<UIManager>()
+            .AddScoped<CurrentSessionContoller>()
+            .AddScoped<ControllersCollection>()
+            .AddScoped(provider => new ControllersCollection(provider))
+            .AddScoped<Startup>();
+
+        ServiceRegistration.Register(services);
     }
 }

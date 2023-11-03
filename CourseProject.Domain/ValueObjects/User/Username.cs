@@ -1,5 +1,7 @@
 ﻿using CourseProject.Domain.Primitives;
 using CourseProject.Domain.Shared;
+using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace CourseProject.Domain.ValueObjects.User;
 
@@ -7,6 +9,7 @@ public sealed class Username : ValueObject
 {
     public const int MaxLength = 15;
 
+    [Newtonsoft.Json.JsonConstructor]
     private Username(string value)
     {
         Value = value;
@@ -37,4 +40,6 @@ public sealed class Username : ValueObject
     {
         yield return Value;
     }
+
+    public static implicit operator string(Username username) => username.Value;
 }

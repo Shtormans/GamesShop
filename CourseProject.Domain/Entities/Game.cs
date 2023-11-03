@@ -12,19 +12,21 @@ public sealed class Game : Entity
     }
 
     public GameTitle Title { get; private set; }
+    public GameCreationDate CreationDate { get; private set; }
     public Money Price { get; private set; }
     public Guid AuthorId { get; private set; }
     public GameDescription Description { get; private set; }
-    public GameImage Image { get; private set; }
+    public GameIcon Image { get; private set; }
     public List<Comment> Comments { get; private set; }
 
-    public static Game Create(GameTitle title, Money price, UserId authorId, GameDescription description, GameImage image)
+    public static Game Create(GameTitle title, GameCreationDate creationDate, Money price, UserId authorId, GameDescription description, GameIcon image)
     {
         Guid id = Guid.NewGuid();
 
         var game = new Game(id)
         {
             Title = title,
+            CreationDate = creationDate,
             Price = price,
             AuthorId = authorId.Value,
             Description = description,

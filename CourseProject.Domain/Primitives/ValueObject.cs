@@ -2,6 +2,16 @@
 
 public abstract class ValueObject : IEquatable<ValueObject>
 {
+    public static bool operator ==(ValueObject left, ValueObject right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(ValueObject left, ValueObject right)
+    {
+        return !(left == right);
+    }
+
     public abstract IEnumerable<object> GetAtomicValues();
 
     public bool Equals(ValueObject? other)
