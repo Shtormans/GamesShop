@@ -1,4 +1,5 @@
-﻿using CourseProject.Domain.Enums;
+﻿using CourseProject.Domain.Entities;
+using CourseProject.Domain.Enums;
 using CourseProject.UI.Abstractions;
 using CourseProject.UI.Controllers;
 using CourseProject.UI.Managers;
@@ -15,7 +16,10 @@ internal class StoreView : BaseMinimizeView
         private Label _creationDate;
         private Label _price;
 
-        public Image Picture
+        private Game _game;
+        private dynamic _viewBag;
+
+        public required Image Picture
         {
             init
             {
@@ -24,7 +28,7 @@ internal class StoreView : BaseMinimizeView
             }
         }
 
-        public string Title
+        public required string Title
         {
             init
             {
@@ -33,7 +37,7 @@ internal class StoreView : BaseMinimizeView
             }
         }
 
-        public string CreationDate
+        public required string CreationDate
         {
             init
             {
@@ -42,12 +46,28 @@ internal class StoreView : BaseMinimizeView
             }
         }
 
-        public string Price
+        public required string Price
         {
             init
             {
                 _price = new Label();
                 _price.Text = value;
+            }
+        }
+
+        public required Game Game
+        {
+            init
+            {
+                _game = value;
+            }
+        }
+
+        public required ViewBag ViewBag
+        {
+            init
+            {
+                _viewBag = value;
             }
         }
 
@@ -58,24 +78,28 @@ internal class StoreView : BaseMinimizeView
             _picture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             _picture.TabIndex = 0;
             _picture.TabStop = false;
+            _picture.Click += GameRow_Click;
 
             _title.AutoSize = true;
             _title.Font = new System.Drawing.Font("Tw Cen MT Condensed Extra Bold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             _title.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(156)))), ((int)(((byte)(186)))), ((int)(((byte)(228)))));
-            _title.Location = new System.Drawing.Point(135, 22);
+            _title.Location = new System.Drawing.Point(135, 16);
             _title.TabIndex = 1;
+            _title.Click += GameRow_Click;
 
             _creationDate.AutoSize = true;
             _creationDate.Font = new System.Drawing.Font("Tw Cen MT Condensed Extra Bold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             _creationDate.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(68)))), ((int)(((byte)(91)))));
-            _creationDate.Location = new System.Drawing.Point(348, 22);
+            _creationDate.Location = new System.Drawing.Point(348, 16);
             _creationDate.TabIndex = 3;
+            _creationDate.Click += GameRow_Click;
 
             _price.AutoSize = true;
             _price.Font = new System.Drawing.Font("Tw Cen MT Condensed Extra Bold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             _price.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(198)))), ((int)(((byte)(212)))), ((int)(((byte)(223)))));
-            _price.Location = new System.Drawing.Point(480, 22);
+            _price.Location = new System.Drawing.Point(460, 16);
             _price.TabIndex = 2;
+            _price.Click += GameRow_Click;
 
             this.Controls.Add(this._picture);
             this.Controls.Add(this._title);
@@ -83,7 +107,14 @@ internal class StoreView : BaseMinimizeView
             this.Controls.Add(this._price);
             this.Size = new System.Drawing.Size(580, 58);
 
+            this.Click += GameRow_Click;
+
             return this;
+        }
+
+        private async void GameRow_Click(object? sender, EventArgs e)
+        {
+            _viewBag.ChangeView(await UIManager.Instance.GetView(nameof(BuyGameController), "ShowGame", new object[] { _game.Id }) as BaseMinimizeView);
         }
     }
 
@@ -93,6 +124,7 @@ internal class StoreView : BaseMinimizeView
     private ComboBox _searchModifierComboBox;
     private Label _label1;
     private TableLayoutPanel _gamesTable;
+    private TableLayoutPanel _genresTable;
 
     public StoreView(ViewBag viewbag)
         : base(viewbag)
@@ -107,7 +139,7 @@ internal class StoreView : BaseMinimizeView
         _searchModifierComboBox = new ComboBox();
         _label1 = new Label();
         _gamesTable = new TableLayoutPanel();
-
+        _genresTable = new TableLayoutPanel();
         // 
         // textBox1
         // 
@@ -131,7 +163,7 @@ internal class StoreView : BaseMinimizeView
         this._searchButton.Name = "button1";
         this._searchButton.Size = new System.Drawing.Size(75, 25);
         this._searchButton.TabIndex = 2;
-        this._searchButton.Text = "Search";
+        this._searchButton.Text = CurrentSessionController.Session.Language.GetString("Search")!;
         this._searchButton.UseVisualStyleBackColor = false;
         this._searchButton.Click += _searchButton_Click;
         // 
@@ -156,14 +188,14 @@ internal class StoreView : BaseMinimizeView
         this._label1.Name = "label1";
         this._label1.Size = new System.Drawing.Size(52, 20);
         this._label1.TabIndex = 3;
-        this._label1.Text = "Sort by";
+        this._label1.Text = CurrentSessionController.Session.Language.GetString("SortBy")!;
         // 
         // comboBox1
         // 
         this._searchModifierComboBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(34)))), ((int)(((byte)(51)))), ((int)(((byte)(72)))));
         this._searchModifierComboBox.ForeColor = System.Drawing.Color.White;
         this._searchModifierComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-        this._searchModifierComboBox.Font = new System.Drawing.Font("Tw Cen MT Condensed Extra Bold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+        this._searchModifierComboBox.Font = new System.Drawing.Font("Tw Cen MT Condensed Bold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
         this._searchModifierComboBox.FormattingEnabled = true;
         this._searchModifierComboBox.ImeMode = System.Windows.Forms.ImeMode.NoControl;
         this._searchModifierComboBox.Location = new System.Drawing.Point(409, 6);
@@ -173,16 +205,16 @@ internal class StoreView : BaseMinimizeView
         this._searchModifierComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
         this._searchModifierComboBox.Items.AddRange(new object[]
         {
-            nameof(SortGamesBy.Title),
-            nameof(SortGamesBy.LowestPrice),
-            nameof(SortGamesBy.HighestPrice),
-            nameof(SortGamesBy.Date),
-            nameof(SortGamesBy.DateDescending)
+            CurrentSessionController.Session.Language.GetString("Title")!,
+            CurrentSessionController.Session.Language.GetString("LowestPrice")!,
+            CurrentSessionController.Session.Language.GetString("HighestPrice")!,
+            CurrentSessionController.Session.Language.GetString("Date")!,
+            CurrentSessionController.Session.Language.GetString("DateDescending")!
         });
         this._searchModifierComboBox.Text = this._searchModifierComboBox.Items[0].ToString();
         this._searchModifierComboBox.SelectedIndexChanged += _searchModifierComboBox_SelectedIndexChanged;
         // 
-        // tableLayoutPanel1
+        // _gamesTable
         // 
         this._gamesTable.AutoSize = true;
         this._gamesTable.ColumnCount = 1;
@@ -191,25 +223,76 @@ internal class StoreView : BaseMinimizeView
         this._gamesTable.Name = "tableLayoutPanel1";
         this._gamesTable.RowCount = 0;
         this._gamesTable.TabIndex = 0;
-        this._gamesTable.AutoScroll = true;
         this._gamesTable.MaximumSize = new Size(0, 500);
         this._gamesTable.Scroll += _gamesTable_Scroll;
+        this._gamesTable.HorizontalScroll.Maximum = 0;
+        this._gamesTable.AutoScroll = false;
+        this._gamesTable.VerticalScroll.Visible = false;
+        this._gamesTable.AutoScroll = true;
+        // 
+        // _genresTable
+        // 
+        this._genresTable.AutoSize = true;
+        this._genresTable.ColumnCount = 1;
+        this._genresTable.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(34)))), ((int)(((byte)(51)))), ((int)(((byte)(72)))));
+        this._genresTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+        this._genresTable.Location = new System.Drawing.Point(53, 72);
+        this._genresTable.Name = "tableLayoutPanel1";
+        this._genresTable.RowCount = 0;
+        this._genresTable.TabIndex = 0;
+        this._genresTable.MaximumSize = new Size(150, 500);
+        this._genresTable.HorizontalScroll.Maximum = 0;
+        this._genresTable.AutoScroll = false;
+        this._genresTable.VerticalScroll.Visible = false;
+        this._genresTable.AutoScroll = true;
 
         this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(27)))), ((int)(((byte)(40)))), ((int)(((byte)(56)))));
         this.PerformLayout();
-        this._searchPanel.Controls.Add(_searchTextBox);
-        this._searchPanel.Controls.Add(_searchButton);
-        this._searchPanel.Controls.Add(_searchModifierComboBox);
-        this._searchPanel.Controls.Add(_label1);
         this.Controls.Add(_searchPanel);
         this.Controls.Add(_gamesTable);
+        this.Controls.Add(_genresTable);
         this._searchPanel.ResumeLayout(false);
         this._searchPanel.PerformLayout();
         this._gamesTable.ResumeLayout(false);
         this._gamesTable.PerformLayout();
+        this._genresTable.ResumeLayout(false);
+        this._genresTable.PerformLayout();
         this.ResumeLayout(false);
 
+        FillGenresTable();
         FillDataGrid();
+    }
+
+    private void FillGenresTable()
+    {
+        var genres = Enum
+            .GetValues(typeof(GameGenre))
+            .Cast<GameGenre>()
+            .Select(x => x.ToString())
+            .ToArray();
+
+        for (int i = 0; i < genres.Length; i++)
+        {
+            _genresTable.RowCount++;
+
+            RowStyle style = new RowStyle();
+            style.SizeType = SizeType.AutoSize;
+
+            _genresTable.RowStyles.Add(style);
+
+            Panel row = new Panel()
+            {
+                Size = new Size(100, 20)
+            };
+
+            CheckBox take = new CheckBox();
+            take.Text = genres[i];
+            row.Controls.Add(take);
+            row.Font = new System.Drawing.Font("Tw Cen MT Condensed Extra Bold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            row.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+
+            _genresTable.Controls.Add(row, _gamesTable.RowCount - 1, 0);
+        }
     }
 
     private void _searchModifierComboBox_SelectedIndexChanged(object? sender, EventArgs e)
@@ -240,20 +323,51 @@ internal class StoreView : BaseMinimizeView
         _gamesTable.Controls.Clear();
     }
 
+    private SortGamesBy SelectModifier()
+    {
+        string textModifier = _searchModifierComboBox.Text;
+
+        if (textModifier == CurrentSessionController.Session.Language.GetString("Title"))
+        {
+            return SortGamesBy.Title;
+        }
+        else if (textModifier == CurrentSessionController.Session.Language.GetString("LowestPrice"))
+        {
+            return SortGamesBy.LowestPrice;
+        }
+        else if (textModifier == CurrentSessionController.Session.Language.GetString("HighestPrice"))
+        {
+            return SortGamesBy.HighestPrice;
+        }
+        else if (textModifier == CurrentSessionController.Session.Language.GetString("Date"))
+        {
+            return SortGamesBy.Date;
+        }
+        else if (textModifier == CurrentSessionController.Session.Language.GetString("DateDescending"))
+        {
+            return SortGamesBy.DateDescending;
+        }
+
+        return SortGamesBy.Title;
+    }
+
     private async Task FillDataGrid()
     {
         string title = _searchTextBox.Text;
-        SortGamesBy sortBy = (SortGamesBy)Enum.Parse(typeof(SortGamesBy), _searchModifierComboBox.Text);
+        SortGamesBy sortBy = SelectModifier();
         int skip = _gamesTable.RowCount;
+        List<GameGenre> genres = GetGenres();
+
         List<GameModelWithImage> gamesWithIcons = (await UIManager
                     .Instance
-                    .UseMethodAsync(nameof(StoreController), "GetNextGames", new object[] { title, sortBy, skip })
+                    .UseMethodAsync(nameof(StoreController), "GetNextGames", new object[] { title, sortBy, skip, genres })
                     as List<GameModelWithImage>)!;
 
         for (int i = 0; i < gamesWithIcons.Count; i++)
         {
             var game = gamesWithIcons[i].Game;
             var gameIcon = gamesWithIcons[i].Icon;
+            Money price = game.Price.ConvertTo(CurrentSessionController.Session.CurrencyType);
 
             _gamesTable.RowCount++;
 
@@ -267,11 +381,38 @@ internal class StoreView : BaseMinimizeView
                 Picture = gameIcon,
                 Title = game.Title.Value,
                 CreationDate = game.CreationDate.DateInLocalTimeZone.ToString("d"),
-                Price = $"{game.Price.Amount} {game.Price.Currency}"
+                Price = $"{price.Amount} {price.Currency}",
+                Game = game,
+                ViewBag = ViewBag
             };
             row.InitializeComponent();
 
             _gamesTable.Controls.Add(row, _gamesTable.RowCount - 1, 0);
         }
+    }
+
+    private List<GameGenre> GetGenres()
+    {
+        List<GameGenre> genres = new List<GameGenre>(_genresTable.Controls.Count);
+
+        foreach (var item in _genresTable.Controls)
+        {
+            var checkBox = (CheckBox)((Panel)item).Controls[0];
+            if (checkBox.Checked)
+            {
+                GameGenre genre = (GameGenre)Enum.Parse(typeof(GameGenre), checkBox.Text, true);
+                genres.Add(genre);
+            }
+        }
+
+        if (genres.Count == 0)
+        {
+            return Enum
+            .GetValues(typeof(GameGenre))
+            .Cast<GameGenre>()
+            .ToList();
+        }
+
+        return genres;
     }
 }

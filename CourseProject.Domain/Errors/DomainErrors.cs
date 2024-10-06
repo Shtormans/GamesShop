@@ -10,6 +10,14 @@ public static class DomainErrors
             "User.WrongId",
             $"Such user doesn't exist.");
 
+        public static readonly Error GameAlreadyBought = new Error(
+            "User.GameAlreadyBought",
+            $"Can't buy game. It is already bought.");
+
+        public static readonly Error CantBeFriendsWithYourself = new Error(
+            "User.CantBeFriendsWithYourself",
+            $"You can't be friends with yourself.");
+
         public static Error EmailAlreadyExist(string email) => new Error(
                 "User.EmailAlreadyExist",
                 $"User with email '{email}' already exist.");
@@ -43,7 +51,7 @@ public static class DomainErrors
 
         public static Error TitleAlreadyExist(string title) => new Error(
             "Game.TitleAlreadyExist",
-            $"Game with title {title} already exist.");
+            $"Game with title {title} already exists.");
     }
 
     public static class Price

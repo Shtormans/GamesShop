@@ -9,4 +9,6 @@ internal interface IWebStorage
     Task<bool> DownloadGameIcon(string imageName);
 
     Task UploadGameIcon(string imageName);
+
+    Task UploadProfilePicture(string imageName);
 }

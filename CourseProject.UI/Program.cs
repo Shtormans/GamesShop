@@ -1,12 +1,15 @@
+using CourseProject.Domain.Enums;
 using CourseProject.Infrastructure;
 using CourseProject.UI.Abstractions;
 using CourseProject.UI.Managers;
+using CourseProject.UI.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Diagnostics;
+using System.Reflection;
+using System.Resources;
 
 namespace CourseProject.UI;
 
@@ -19,9 +22,7 @@ internal static class Program
         ApplicationConfiguration.Initialize();
 
         host.Services.GetRequiredService<UIManager>();
-        host.Services.GetRequiredService<CurrentSessionContoller>();
 
-        //System.Windows.Forms.Application.Run(new TestForm());
         await host.Services.GetRequiredService<Startup>().Run();
     }
 
@@ -70,11 +71,26 @@ internal static class Program
         services
             .AddScoped<IMainForm, MainForm>()
             .AddScoped<UIManager>()
-            .AddScoped<CurrentSessionContoller>()
             .AddScoped<ControllersCollection>()
             .AddScoped(provider => new ControllersCollection(provider))
             .AddScoped<Startup>();
 
+        CreateSession(configurations);
+
         ServiceRegistration.Register(services);
+    }
+
+    private static void CreateSession(IConfiguration configuration)
+    {
+        string languagePath = $"{configuration.GetConnectionString("LanguagesFolderPath")}.{configuration["Language"]}";
+
+        ChangeSessionModel sessionModel = new()
+        {
+            User = null,
+            Language = new ResourceManager(languagePath, Assembly.GetExecutingAssembly()),
+            CurrencyType = (CurrencyType)Enum.Parse(typeof(CurrencyType), configuration["Currency"]!, true)
+        };
+
+        CurrentSessionController.SetNewSession(sessionModel);
     }
 }

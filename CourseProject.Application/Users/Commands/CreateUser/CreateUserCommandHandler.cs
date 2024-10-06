@@ -80,7 +80,7 @@ internal class CreateUserCommandHandler : ICommandHandler<CreateUserCommand, Use
         user = await _userRepository.GetByUsernameAsync(request.Username);
         if (user is not null)
         {
-            return Result.Failure<User>(DomainErrors.User.EmailAlreadyExist(usernameResult.Value.Value));
+            return Result.Failure<User>(DomainErrors.User.UsernameAlreadyExist(usernameResult.Value.Value));
         }
 
         var userModel = User.Create(

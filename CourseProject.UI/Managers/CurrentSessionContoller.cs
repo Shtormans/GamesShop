@@ -1,32 +1,35 @@
 ﻿using CourseProject.Domain.Entities;
+using CourseProject.Domain.Enums;
 using CourseProject.UI.Models;
+using System.Reflection;
+using System.Resources;
 
 namespace CourseProject.UI.Managers;
 
-internal sealed class CurrentSessionContoller
+internal sealed class CurrentSessionController
 {
-    private static CurrentSessionContoller? _instance;
+    private static CurrentSessionController? _instance;
     private Session _currentSession;
 
-    public CurrentSessionContoller()
+    public CurrentSessionController()
     {
         _instance = this;
     }
 
-    public static CurrentSessionContoller Instance
+    public static CurrentSessionController Instance
     {
         get
         {
             if (_instance is null)
             {
-                throw new NotImplementedException();
+                _instance = new CurrentSessionController();
             }
 
             return _instance;
         }
     }
 
-    public static Session CurrentSession
+    public static Session Session
     {
         get
         {
@@ -34,8 +37,12 @@ internal sealed class CurrentSessionContoller
         }
     }
 
-    public static void SetNewSession(User currentUser)
+    public static void SetNewSession(ChangeSessionModel sessionModel)
     {
-        Instance._currentSession = new Session(currentUser);
+        sessionModel.User ??= Session?.User;
+        sessionModel.Language ??= Session?.Language;
+        sessionModel.CurrencyType ??= Session?.CurrencyType;
+
+        Instance._currentSession = new Session(sessionModel.User, sessionModel.Language, (CurrencyType)sessionModel.CurrencyType);
     }
 }

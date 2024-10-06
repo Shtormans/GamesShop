@@ -42,7 +42,7 @@ internal class FirstRegistrationView : BaseFullScreenView
         this._label1.Name = "label1";
         this._label1.Size = new System.Drawing.Size(47, 20);
         this._label1.TabIndex = 0;
-        this._label1.Text = "EMAIL";
+        this._label1.Text = CurrentSessionController.Session.Language.GetString("Email")!.ToUpper();
         // 
         // UsernameInput
         // 
@@ -55,14 +55,14 @@ internal class FirstRegistrationView : BaseFullScreenView
         this._emailInput.Size = new System.Drawing.Size(347, 23);
         this._emailInput.TabIndex = 1;
         // 
-        // PasswordInput
+        // ConfirmEmailInput
         // 
         this._confirmEmailInput.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(60)))), ((int)(((byte)(68)))));
         this._confirmEmailInput.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
         this._confirmEmailInput.Font = new System.Drawing.Font("Tw Cen MT Condensed Extra Bold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
         this._confirmEmailInput.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
         this._confirmEmailInput.Location = new System.Drawing.Point(30, 136);
-        this._confirmEmailInput.Name = "PasswordInput";
+        this._confirmEmailInput.Name = "ConfirmEmailInput";
         this._confirmEmailInput.Size = new System.Drawing.Size(347, 23);
         this._confirmEmailInput.TabIndex = 3;
         // 
@@ -75,7 +75,7 @@ internal class FirstRegistrationView : BaseFullScreenView
         this._label2.Name = "label2";
         this._label2.Size = new System.Drawing.Size(107, 20);
         this._label2.TabIndex = 2;
-        this._label2.Text = "CONFIRM EMAIL";
+        this._label2.Text = CurrentSessionController.Session.Language.GetString("ConfirmEmail")!.ToUpper();
         // 
         // NextButton
         // 
@@ -88,7 +88,7 @@ internal class FirstRegistrationView : BaseFullScreenView
         this._nextButton.Name = "NextButton";
         this._nextButton.Size = new System.Drawing.Size(253, 45);
         this._nextButton.TabIndex = 5;
-        this._nextButton.Text = "Next";
+        this._nextButton.Text = CurrentSessionController.Session.Language.GetString("Next")!;
         this._nextButton.UseVisualStyleBackColor = false;
         this._nextButton.Click += _nextButton_Click;
         // 
@@ -101,7 +101,7 @@ internal class FirstRegistrationView : BaseFullScreenView
         this._label3.Name = "label3";
         this._label3.Size = new System.Drawing.Size(184, 19);
         this._label3.TabIndex = 6;
-        this._label3.Text = "Already have an account ?";
+        this._label3.Text = CurrentSessionController.Session.Language.GetString("AlreadyHaveAnAccount")!;
         // 
         // SignInLabel
         // 
@@ -114,7 +114,7 @@ internal class FirstRegistrationView : BaseFullScreenView
         this._signInLink.Name = "SignInLabel";
         this._signInLink.Size = new System.Drawing.Size(54, 19);
         this._signInLink.TabIndex = 7;
-        this._signInLink.Text = "Sign in";
+        this._signInLink.Text = CurrentSessionController.Session.Language.GetString("SignIn")!;
         this._signInLink.LinkClicked += RegistrationLink_LinkClicked;
         // 
         // TestForm

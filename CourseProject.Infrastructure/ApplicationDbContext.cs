@@ -13,6 +13,7 @@ public sealed class ApplicationDbContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<Comment> Comments { get; set; }
     public DbSet<Game> Games { get; set; }
+    public DbSet<Transaction> Transactions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

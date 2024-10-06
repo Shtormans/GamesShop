@@ -1,6 +1,5 @@
 ﻿using CourseProject.Domain.Primitives;
 using CourseProject.Domain.Shared;
-using CourseProject.Domain.ValueObjects.Game;
 
 namespace CourseProject.Domain.ValueObjects.Comment;
 

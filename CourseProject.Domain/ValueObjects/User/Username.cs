@@ -1,7 +1,5 @@
 ﻿using CourseProject.Domain.Primitives;
 using CourseProject.Domain.Shared;
-using Newtonsoft.Json;
-using System.Text.Json.Serialization;
 
 namespace CourseProject.Domain.ValueObjects.User;
 

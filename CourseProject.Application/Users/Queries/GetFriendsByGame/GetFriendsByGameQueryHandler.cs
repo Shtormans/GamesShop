@@ -31,7 +31,7 @@ internal class GetFriendsByGameQueryHandler : IQueryHandler<GetFriendsByGameQuer
             return Result.Failure<List<User>>(DomainErrors.Game.WrongId);
         }
 
-        var friends = await _userRepository.GetFriendsByGame(user.Id, game.Id, cancellationToken);
+        var friends = await _userRepository.GetFriendsByGameAsync(user.Id, game.Id, cancellationToken);
         return friends;
     }
 }

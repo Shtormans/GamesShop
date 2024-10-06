@@ -55,7 +55,7 @@ internal class FullRegistrationView : BaseFullScreenView
         this._label1.Name = "label1";
         this._label1.Size = new System.Drawing.Size(84, 20);
         this._label1.TabIndex = 0;
-        this._label1.Text = "USERNAME*";
+        this._label1.Text = CurrentSessionController.Session.Language.GetString("Username")!.ToUpper() + "*";
         // 
         // UsernameInput
         // 
@@ -78,6 +78,7 @@ internal class FullRegistrationView : BaseFullScreenView
         this._passwordInput.Name = "PasswordInput";
         this._passwordInput.Size = new System.Drawing.Size(347, 23);
         this._passwordInput.TabIndex = 3;
+        this._passwordInput.PasswordChar = '*';
         // 
         // label2
         // 
@@ -88,7 +89,7 @@ internal class FullRegistrationView : BaseFullScreenView
         this._label2.Name = "label2";
         this._label2.Size = new System.Drawing.Size(84, 20);
         this._label2.TabIndex = 2;
-        this._label2.Text = "PASSWORD*";
+        this._label2.Text = CurrentSessionController.Session.Language.GetString("Password")!.ToUpper() + "*";
         // 
         // RegisterButton
         // 
@@ -101,7 +102,7 @@ internal class FullRegistrationView : BaseFullScreenView
         this._registerButton.Name = "RegisterButton";
         this._registerButton.Size = new System.Drawing.Size(253, 45);
         this._registerButton.TabIndex = 5;
-        this._registerButton.Text = "Register";
+        this._registerButton.Text = CurrentSessionController.Session.Language.GetString("Register")!;
         this._registerButton.UseVisualStyleBackColor = false;
         this._registerButton.Click += RegisterButton_Click;
         // 
@@ -115,6 +116,7 @@ internal class FullRegistrationView : BaseFullScreenView
         this._confirmPasswordInput.Name = "textBox1";
         this._confirmPasswordInput.Size = new System.Drawing.Size(347, 23);
         this._confirmPasswordInput.TabIndex = 7;
+        this._confirmPasswordInput.PasswordChar = '*';
         // 
         // label3
         // 
@@ -125,7 +127,7 @@ internal class FullRegistrationView : BaseFullScreenView
         this._label3.Name = "label3";
         this._label3.Size = new System.Drawing.Size(182, 20);
         this._label3.TabIndex = 6;
-        this._label3.Text = "CONFIRM YOUR PASSWORD*";
+        this._label3.Text = CurrentSessionController.Session.Language.GetString("ConfirmYourPassword")!.ToUpper() + "*";
         // 
         // textBox2
         // 
@@ -147,7 +149,7 @@ internal class FullRegistrationView : BaseFullScreenView
         this.label4.Name = "label4";
         this.label4.Size = new System.Drawing.Size(82, 20);
         this.label4.TabIndex = 8;
-        this.label4.Text = "FIRST NAME";
+        this.label4.Text = CurrentSessionController.Session.Language.GetString("FirstName")!.ToUpper();
         // 
         // textBox3
         // 
@@ -169,7 +171,7 @@ internal class FullRegistrationView : BaseFullScreenView
         this._label5.Name = "label5";
         this._label5.Size = new System.Drawing.Size(100, 20);
         this._label5.TabIndex = 10;
-        this._label5.Text = "SECOND NAME";
+        this._label5.Text = CurrentSessionController.Session.Language.GetString("SecondName")!.ToUpper();
         // 
         // label6
         // 
@@ -180,7 +182,7 @@ internal class FullRegistrationView : BaseFullScreenView
         this._label6.Name = "label6";
         this._label6.Size = new System.Drawing.Size(76, 20);
         this._label6.TabIndex = 12;
-        this._label6.Text = "BIRTHDAY*";
+        this._label6.Text = CurrentSessionController.Session.Language.GetString("Birthday")!.ToUpper() + "*";
         // 
         // birthdayPicker
         // 
@@ -188,6 +190,7 @@ internal class FullRegistrationView : BaseFullScreenView
         this._birthdayPicker.CalendarTitleBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(60)))), ((int)(((byte)(68)))));
         this._birthdayPicker.CalendarTitleForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(60)))), ((int)(((byte)(68)))));
         this._birthdayPicker.CalendarTrailingForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(60)))), ((int)(((byte)(68)))));
+        this._birthdayPicker.Format = System.Windows.Forms.DateTimePickerFormat.Short;
         this._birthdayPicker.Location = new System.Drawing.Point(30, 398);
         this._birthdayPicker.MaxDate = new System.DateTime(2018, 12, 31, 0, 0, 0, 0);
         this._birthdayPicker.MinDate = new System.DateTime(1950, 1, 1, 0, 0, 0, 0);

@@ -15,7 +15,7 @@ namespace CourseProject.UI.Controllers;
 
 internal class RegistrationController : BaseController
 {
-    public RegistrationController(ISender sender) 
+    public RegistrationController(ISender sender)
         : base(sender)
     {
     }
@@ -74,6 +74,11 @@ internal class RegistrationController : BaseController
         {
             var cashCommand = new CashCurrentUserCommand(userResult.Value);
             await Sender.Send(cashCommand);
+
+            CurrentSessionController.SetNewSession(new ChangeSessionModel()
+            {
+                User = userResult.Value
+            });
 
             await UIManager.Instance.ShowView(nameof(HomeController));
 

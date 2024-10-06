@@ -26,7 +26,7 @@ internal class LibraryController : BaseController
 
     public async Task<List<Game>> GetUserLibrary()
     {
-        var user = CurrentSessionContoller.CurrentSession.CurrentUser;
+        var user = CurrentSessionController.Session.User;
 
         var libraryQuery = new GetGamesByUserLibraryQuery(user.Id);
         var library = await Sender.Send(libraryQuery);
@@ -44,7 +44,7 @@ internal class LibraryController : BaseController
 
     public async Task<Result> CreateComment(Game game, string commentText)
     {
-        var user = CurrentSessionContoller.CurrentSession.CurrentUser;
+        var user = CurrentSessionController.Session.User;
 
         var query = new CreateCommentCommand(commentText, UserId.Create(user.Id).Value, GameId.Create(game.Id).Value);
         var result = await Sender.Send(query);
@@ -85,7 +85,7 @@ internal class LibraryController : BaseController
 
     public async Task<List<UserWithProfilePicture>> GetNextFriends(Game game)
     {
-        var currentUser = CurrentSessionContoller.CurrentSession.CurrentUser;
+        var currentUser = CurrentSessionController.Session.User;
 
         var friendsQuery = new GetFriendsByGameQuery(currentUser.Id, game.Id);
         var friends = await Sender.Send(friendsQuery);

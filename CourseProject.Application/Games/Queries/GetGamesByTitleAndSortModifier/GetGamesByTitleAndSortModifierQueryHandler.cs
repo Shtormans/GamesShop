@@ -18,7 +18,7 @@ internal class GetGamesByTitleAndSortModifierQueryHandler : IQueryHandler<GetGam
     public async Task<Result<List<Game>>> Handle(GetGamesByTitleAndSortModifierQuery request, CancellationToken cancellationToken)
     {
         string title = request.Title.Trim();
-        var where = (Game x) => ((string)x.Title).StartsWith(request.Title);
+        var where = (Game x) => ((string)x.Title).Contains(request.Title, StringComparison.CurrentCultureIgnoreCase);
         
         Func<Game, object> orderBy = request.SortingStrategy switch
         {
@@ -40,7 +40,7 @@ internal class GetGamesByTitleAndSortModifierQueryHandler : IQueryHandler<GetGam
             _ => throw new NotImplementedException()
         };
 
-        var games = await _gameRepository.GetByTitleAndSortModifier(title, where, orderBy, inAscendingOrder, (int)request.Skip, (int)request.Top, cancellationToken);
+        var games = await _gameRepository.GetByTitleAndSortModifier(title, where, orderBy, inAscendingOrder, (int)request.Skip, (int)request.Top, request.Genres, cancellationToken);
 
         return games;
     }

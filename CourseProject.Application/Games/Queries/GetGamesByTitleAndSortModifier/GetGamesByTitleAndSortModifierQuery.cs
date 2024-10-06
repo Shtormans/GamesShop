@@ -4,4 +4,4 @@ using CourseProject.Domain.Enums;
 
 namespace CourseProject.Application.Games.Queries.GetGamesByTitleAndSortModifier;
 
-public sealed record GetGamesByTitleAndSortModifierQuery(string Title, SortGamesBy SortingStrategy, uint Skip, uint Top) : IQuery<List<Game>>;
+public sealed record GetGamesByTitleAndSortModifierQuery(string Title, SortGamesBy SortingStrategy, uint Skip, uint Top, List<GameGenre> Genres) : IQuery<List<Game>>;

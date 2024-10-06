@@ -66,6 +66,9 @@ namespace CourseProject.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Genre")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("Image")
                         .HasColumnType("uniqueidentifier");
 
@@ -82,6 +85,35 @@ namespace CourseProject.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Games", (string)null);
+                });
+
+            modelBuilder.Entity("CourseProject.Domain.Entities.Transaction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("GameId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PayerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("PurchaseDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("ReceiverId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GameId");
+
+                    b.HasIndex("PayerId");
+
+                    b.HasIndex("ReceiverId");
+
+                    b.ToTable("Transactions", (string)null);
                 });
 
             modelBuilder.Entity("CourseProject.Domain.Entities.User", b =>
@@ -183,7 +215,7 @@ namespace CourseProject.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.OwnsOne("CourseProject.Domain.Entities.Game.Price#Money", "Price", b1 =>
+                    b.OwnsOne("Money", "Price", b1 =>
                         {
                             b1.Property<Guid>("GameId")
                                 .HasColumnType("uniqueidentifier");
@@ -198,7 +230,7 @@ namespace CourseProject.Infrastructure.Migrations
 
                             b1.HasKey("GameId");
 
-                            b1.ToTable("Games", (string)null);
+                            b1.ToTable("Games");
 
                             b1.WithOwner()
                                 .HasForeignKey("GameId");
@@ -206,6 +238,57 @@ namespace CourseProject.Infrastructure.Migrations
 
                     b.Navigation("Price")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("CourseProject.Domain.Entities.Transaction", b =>
+                {
+                    b.HasOne("CourseProject.Domain.Entities.Game", "Game")
+                        .WithMany()
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("CourseProject.Domain.Entities.User", "Payer")
+                        .WithMany()
+                        .HasForeignKey("PayerId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("CourseProject.Domain.Entities.User", "Receiver")
+                        .WithMany()
+                        .HasForeignKey("ReceiverId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.OwnsOne("Money", "Price", b1 =>
+                        {
+                            b1.Property<Guid>("TransactionId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<decimal>("Amount")
+                                .HasColumnType("decimal(18,2)");
+
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasMaxLength(3)
+                                .HasColumnType("nvarchar(3)");
+
+                            b1.HasKey("TransactionId");
+
+                            b1.ToTable("Transactions");
+
+                            b1.WithOwner()
+                                .HasForeignKey("TransactionId");
+                        });
+
+                    b.Navigation("Game");
+
+                    b.Navigation("Payer");
+
+                    b.Navigation("Price")
+                        .IsRequired();
+
+                    b.Navigation("Receiver");
                 });
 
             modelBuilder.Entity("GameUser", b =>

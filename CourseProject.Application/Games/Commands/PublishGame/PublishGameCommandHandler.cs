@@ -71,13 +71,17 @@ internal class PublishGameCommandHandler : ICommandHandler<PublishGameCommand>
         var game = Game.Create(
             gameTitleResult.Value,
             gameCreationDateResult.Value,
-            request.Price,
+            request.Price.ConvertToUSD(),
+            request.Genre,
             UserId.Create(author.Id).Value,
             gameDescriptionResult.Value,
             imageResult.Value
         );
 
         _gameRepository.Add(game);
+
+        var userWithTracking = await _userRepository.GetByIdWithTrackingAsync(request.AuthorId.Value, cancellationToken);
+        userWithTracking!.BuyGame(game);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 

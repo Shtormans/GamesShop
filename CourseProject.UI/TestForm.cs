@@ -16,5 +16,16 @@ namespace CourseProject.UI
         {
             InitializeComponent();
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show($"{comboBox1.SelectedIndex} {comboBox1.SelectedItem.ToString()}");
+            comboBox1.Text = "2";
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

@@ -44,18 +44,28 @@ internal class ChangeGameCommandHandler : ICommandHandler<ChangeGameCommand>
             return Result.Failure<GameId>(DomainErrors.Price.IncorrectPrice);
         }
 
+        if (request.Title != oldGame.Title.Value)
+        {
+            var gameByTitle = await _gameRepository.GetByTitleAsync(request.Title);
+            if (gameByTitle is not null)
+            {
+                return Result.Failure<GameId>(DomainErrors.Game.TitleAlreadyExist(request.Title));
+            }
+        }
+
         Task.Run(() => _cashRepository.UploadGameIcon(oldGame.Image.Id.ToString(), request.Icon));
 
         var newGame = Game.Create(
             gameTitleResult.Value,
             oldGame.CreationDate,
-            request.Price,
+            request.Price.ConvertToUSD(),
+            request.Genre,
             UserId.Create(oldGame.AuthorId).Value,
             gameDescriptionResult.Value,
             oldGame.Image
         );
 
-        await _gameRepository.UpdateGame(oldGame, newGame);
+        await _gameRepository.Update(oldGame, newGame);
 
         return Result.Success();
     }

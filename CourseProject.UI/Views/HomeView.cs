@@ -1,6 +1,9 @@
 ﻿using CourseProject.UI.Abstractions;
+using CourseProject.UI.Managers;
 using CourseProject.UI.Models;
 using CourseProject.UI.Views.Home;
+using CourseProject.UI.Views.Home.Friends;
+using CourseProject.UI.Views.Home.Settings;
 
 namespace CourseProject.UI.Views;
 
@@ -9,7 +12,7 @@ internal class HomeView : BaseFullScreenView
     private Panel _menuPanel;
     private PictureBox _redoButton;
     private PictureBox _undoButton;
-    private PictureBox accountPicture;
+    private PictureBox _accountPicture;
     private LinkLabel _accountLink;
     private LinkLabel _friendsLink;
     private LinkLabel _myGamesLink;
@@ -32,11 +35,11 @@ internal class HomeView : BaseFullScreenView
         this._myGamesLink = new System.Windows.Forms.LinkLabel();
         this._friendsLink = new System.Windows.Forms.LinkLabel();
         this._accountLink = new System.Windows.Forms.LinkLabel();
-        this.accountPicture = new System.Windows.Forms.PictureBox();
+        this._accountPicture = new System.Windows.Forms.PictureBox();
         this._undoButton = new System.Windows.Forms.PictureBox();
         this._redoButton = new System.Windows.Forms.PictureBox();
         this._menuPanel.SuspendLayout();
-        ((System.ComponentModel.ISupportInitialize)(this.accountPicture)).BeginInit();
+        ((System.ComponentModel.ISupportInitialize)(this._accountPicture)).BeginInit();
         ((System.ComponentModel.ISupportInitialize)(this._undoButton)).BeginInit();
         ((System.ComponentModel.ISupportInitialize)(this._redoButton)).BeginInit();
         this.SuspendLayout();
@@ -46,7 +49,7 @@ internal class HomeView : BaseFullScreenView
         this._menuPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(29)))), ((int)(((byte)(37)))));
         this._menuPanel.Controls.Add(this._redoButton);
         this._menuPanel.Controls.Add(this._undoButton);
-        this._menuPanel.Controls.Add(this.accountPicture);
+        this._menuPanel.Controls.Add(this._accountPicture);
         this._menuPanel.Controls.Add(this._accountLink);
         this._menuPanel.Controls.Add(this._friendsLink);
         this._menuPanel.Controls.Add(this._myGamesLink);
@@ -70,7 +73,7 @@ internal class HomeView : BaseFullScreenView
         this._storeLink.Size = new System.Drawing.Size(56, 27);
         this._storeLink.TabIndex = 0;
         this._storeLink.TabStop = true;
-        this._storeLink.Text = "Store";
+        this._storeLink.Text = CurrentSessionController.Session.Language.GetString("Store")!;
         this._storeLink.VisitedLinkColor = System.Drawing.Color.White;
         this._storeLink.LinkClicked += _storeLink_LinkClicked;
         // 
@@ -81,12 +84,12 @@ internal class HomeView : BaseFullScreenView
         this._libraryLink.Font = new System.Drawing.Font("Tw Cen MT Condensed Extra Bold", 17F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
         this._libraryLink.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
         this._libraryLink.LinkColor = System.Drawing.Color.White;
-        this._libraryLink.Location = new System.Drawing.Point(156, 11);
+        this._libraryLink.Location = new System.Drawing.Point(180, 11);
         this._libraryLink.Name = "_libraryLink";
         this._libraryLink.Size = new System.Drawing.Size(74, 27);
         this._libraryLink.TabIndex = 1;
         this._libraryLink.TabStop = true;
-        this._libraryLink.Text = "Library";
+        this._libraryLink.Text = CurrentSessionController.Session.Language.GetString("Library")!;
         this._libraryLink.VisitedLinkColor = System.Drawing.Color.White;
         this._libraryLink.LinkClicked += _libraryLink_LinkClicked;
         // 
@@ -97,12 +100,12 @@ internal class HomeView : BaseFullScreenView
         this._myGamesLink.Font = new System.Drawing.Font("Tw Cen MT Condensed Extra Bold", 17F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
         this._myGamesLink.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
         this._myGamesLink.LinkColor = System.Drawing.Color.White;
-        this._myGamesLink.Location = new System.Drawing.Point(246, 11);
+        this._myGamesLink.Location = new System.Drawing.Point(295, 11);
         this._myGamesLink.Name = "_myGamesLink";
         this._myGamesLink.Size = new System.Drawing.Size(104, 27);
         this._myGamesLink.TabIndex = 2;
         this._myGamesLink.TabStop = true;
-        this._myGamesLink.Text = "My Games";
+        this._myGamesLink.Text = CurrentSessionController.Session.Language.GetString("MyGames")!;
         this._myGamesLink.VisitedLinkColor = System.Drawing.Color.White;
         this._myGamesLink.LinkClicked += _myGamesLink_LinkClicked;
         // 
@@ -113,12 +116,12 @@ internal class HomeView : BaseFullScreenView
         this._friendsLink.Font = new System.Drawing.Font("Tw Cen MT Condensed Extra Bold", 17F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
         this._friendsLink.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
         this._friendsLink.LinkColor = System.Drawing.Color.White;
-        this._friendsLink.Location = new System.Drawing.Point(361, 11);
+        this._friendsLink.Location = new System.Drawing.Point(400, 11);
         this._friendsLink.Name = "_friendsLink";
         this._friendsLink.Size = new System.Drawing.Size(76, 27);
         this._friendsLink.TabIndex = 3;
         this._friendsLink.TabStop = true;
-        this._friendsLink.Text = "Friends";
+        this._friendsLink.Text = CurrentSessionController.Session.Language.GetString("Friends")!;
         this._friendsLink.VisitedLinkColor = System.Drawing.Color.White;
         this._friendsLink.LinkClicked += _friendsLink_LinkClicked;
         // 
@@ -140,13 +143,14 @@ internal class HomeView : BaseFullScreenView
         // 
         // accountPicture
         // 
-        this.accountPicture.Location = new System.Drawing.Point(944, 15);
-        this.accountPicture.Name = "accountPicture";
-        this.accountPicture.Size = new System.Drawing.Size(20, 20);
-        this.accountPicture.TabIndex = 5;
-        this.accountPicture.TabStop = false;
-        this.accountPicture.SizeMode = PictureBoxSizeMode.StretchImage;
-        this.accountPicture.Image = ViewBag.AccountPicture;
+        this._accountPicture.Location = new System.Drawing.Point(944, 15);
+        this._accountPicture.Name = "accountPicture";
+        this._accountPicture.Size = new System.Drawing.Size(20, 20);
+        this._accountPicture.TabIndex = 5;
+        this._accountPicture.TabStop = false;
+        this._accountPicture.SizeMode = PictureBoxSizeMode.StretchImage;
+        this._accountPicture.Image = ViewBag.AccountPicture;
+        this._accountPicture.Click += _accountPicture_Click;
         // 
         // _undoButton
         // 
@@ -178,50 +182,50 @@ internal class HomeView : BaseFullScreenView
         this.Controls.Add(this._menuPanel);
         this._menuPanel.ResumeLayout(false);
         this._menuPanel.PerformLayout();
-        ((System.ComponentModel.ISupportInitialize)this.accountPicture).EndInit();
+        ((System.ComponentModel.ISupportInitialize)this._accountPicture).EndInit();
         ((System.ComponentModel.ISupportInitialize)this._undoButton).EndInit();
         ((System.ComponentModel.ISupportInitialize)this._redoButton).EndInit();
         this.ResumeLayout(false);
         this.PerformLayout();
+
+        ChangeViewAction = ChangeView;
+        ViewBag.ChangeView = ChangeViewAction;
+    }
+
+    public Action<BaseMinimizeView> ChangeViewAction;
+
+    private void ChangeView(BaseMinimizeView view)
+    {
+        _changeableMinimizeView.SetView(view);
     }
 
     private void _accountLink_LinkClicked(object? sender, LinkLabelLinkClickedEventArgs e)
     {
-        if (_changeableMinimizeView.GetViewType() != typeof(StoreView))
-        {
-            _changeableMinimizeView.SetView(new StoreView(ViewBag));
-        }
+        _changeableMinimizeView.SetView(new SettingsView(ViewBag));
+    }
+
+    private void _accountPicture_Click(object? sender, EventArgs e)
+    {
+        _changeableMinimizeView.SetView(new SettingsView(ViewBag));
     }
 
     private void _friendsLink_LinkClicked(object? sender, LinkLabelLinkClickedEventArgs e)
     {
-        if (_changeableMinimizeView.GetViewType() != typeof(StoreView))
-        {
-            _changeableMinimizeView.SetView(new StoreView(ViewBag));
-        }
+        _changeableMinimizeView.SetView(new FriendsView(ViewBag));
     }
 
     private void _myGamesLink_LinkClicked(object? sender, LinkLabelLinkClickedEventArgs e)
     {
-        if (_changeableMinimizeView.GetViewType() != typeof(MyGamesView))
-        {
-            _changeableMinimizeView.SetView(new MyGamesView(ViewBag));
-        }
+        _changeableMinimizeView.SetView(new MyGamesView(ViewBag));
     }
 
     private void _libraryLink_LinkClicked(object? sender, LinkLabelLinkClickedEventArgs e)
     {
-        if (_changeableMinimizeView.GetViewType() != typeof(LibraryView))
-        {
-            _changeableMinimizeView.SetView(new LibraryView(ViewBag));
-        }
+        _changeableMinimizeView.SetView(new LibraryView(ViewBag));
     }
 
     private void _storeLink_LinkClicked(object? sender, LinkLabelLinkClickedEventArgs e)
     {
-        if (_changeableMinimizeView.GetViewType() != typeof(StoreView))
-        {
-            _changeableMinimizeView.SetView(new StoreView(ViewBag));
-        }
+        _changeableMinimizeView.SetView(new StoreView(ViewBag));
     }
 }

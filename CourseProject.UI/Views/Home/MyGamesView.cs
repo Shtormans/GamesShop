@@ -1,4 +1,5 @@
 ﻿using CourseProject.Domain.Entities;
+using CourseProject.Domain.Enums;
 using CourseProject.Domain.Shared;
 using CourseProject.UI.Abstractions;
 using CourseProject.UI.Controllers;
@@ -22,6 +23,8 @@ internal class MyGamesView : BaseMinimizeView
     private RichTextBox _descriptionInput;
     private Button _addNewGameButton;
     private Panel _gameInfoPanel;
+    private Label _label5;
+    private ComboBox _genreComboBox;
     private List<Game> _userGames;
 
     public MyGamesView(ViewBag viewbag) 
@@ -44,6 +47,8 @@ internal class MyGamesView : BaseMinimizeView
         this._gameIcon = new System.Windows.Forms.PictureBox();
         this._gamesListBox = new System.Windows.Forms.ListBox();
         this._gameInfoPanel = new System.Windows.Forms.Panel();
+        this._label5 = new System.Windows.Forms.Label();
+        this._genreComboBox = new System.Windows.Forms.ComboBox();
         ((System.ComponentModel.ISupportInitialize)(this._priceInput)).BeginInit();
         ((System.ComponentModel.ISupportInitialize)(this._gameIcon)).BeginInit();
         this.SuspendLayout();
@@ -58,7 +63,7 @@ internal class MyGamesView : BaseMinimizeView
         this._addNewGameButton.Name = "_addNewGameButton";
         this._addNewGameButton.Size = new System.Drawing.Size(175, 30);
         this._addNewGameButton.TabIndex = 6;
-        this._addNewGameButton.Text = "Add New Game";
+        this._addNewGameButton.Text = CurrentSessionController.Session.Language.GetString("AddNewGame")!;
         this._addNewGameButton.UseVisualStyleBackColor = false;
         this._addNewGameButton.Click += _addNewGameButton_Click;
         // 
@@ -70,7 +75,7 @@ internal class MyGamesView : BaseMinimizeView
         this._priceInput.ForeColor = System.Drawing.Color.White;
         this._priceInput.Location = new System.Drawing.Point(183, 252);
         this._priceInput.Maximum = new decimal(new int[] {
-            1000,
+            100000,
             0,
             0,
             0});
@@ -78,7 +83,7 @@ internal class MyGamesView : BaseMinimizeView
             1,
             0,
             0,
-            131072});
+            0});
         this._priceInput.Name = "_gamePriceInput";
         this._priceInput.Size = new System.Drawing.Size(120, 25);
         this._priceInput.TabIndex = 15;
@@ -87,7 +92,7 @@ internal class MyGamesView : BaseMinimizeView
             1,
             0,
             0,
-            131072});
+            0});
         // 
         // _currencyComboBox
         // 
@@ -98,10 +103,8 @@ internal class MyGamesView : BaseMinimizeView
         this._currencyComboBox.ForeColor = System.Drawing.Color.White;
         this._currencyComboBox.FormattingEnabled = true;
         this._currencyComboBox.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-        this._currencyComboBox.Items.AddRange(new object[] {
-            "USD",
-            "UAH"});
-        this._currencyComboBox.SelectedIndex = 0;
+        this._currencyComboBox.Items.AddRange(Money.GetAllCurrencies());
+        this._currencyComboBox.Text = CurrentSessionController.Session.CurrencyType.ToString();
         this._currencyComboBox.Location = new System.Drawing.Point(316, 251);
         this._currencyComboBox.Name = "_currencyComboBox";
         this._currencyComboBox.Size = new System.Drawing.Size(92, 28);
@@ -116,7 +119,7 @@ internal class MyGamesView : BaseMinimizeView
         this._label4.Name = "label4";
         this._label4.Size = new System.Drawing.Size(97, 22);
         this._label4.TabIndex = 12;
-        this._label4.Text = "Game Price:";
+        this._label4.Text = CurrentSessionController.Session.Language.GetString("GamePrice")! + ":";
         // 
         // _saveChangesButton
         // 
@@ -125,7 +128,7 @@ internal class MyGamesView : BaseMinimizeView
         this._saveChangesButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         this._saveChangesButton.Font = new System.Drawing.Font("Tw Cen MT Condensed Extra Bold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
         this._saveChangesButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(103)))), ((int)(((byte)(193)))), ((int)(((byte)(245)))));
-        this._saveChangesButton.Location = new System.Drawing.Point(16, 533);
+        this._saveChangesButton.Location = new System.Drawing.Point(16, 563);
         this._saveChangesButton.Name = "_saveChangesButton";
         this._saveChangesButton.Size = new System.Drawing.Size(108, 25);
         this._saveChangesButton.TabIndex = 5;
@@ -138,18 +141,18 @@ internal class MyGamesView : BaseMinimizeView
         this._label3.AutoSize = true;
         this._label3.Font = new System.Drawing.Font("Tw Cen MT Condensed Extra Bold", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
         this._label3.ForeColor = System.Drawing.Color.White;
-        this._label3.Location = new System.Drawing.Point(16, 333);
+        this._label3.Location = new System.Drawing.Point(16, 373);
         this._label3.Name = "label3";
         this._label3.Size = new System.Drawing.Size(141, 22);
         this._label3.TabIndex = 11;
-        this._label3.Text = "Game Description:";
+        this._label3.Text = CurrentSessionController.Session.Language.GetString("GameDescription")! + ":";
         // 
         // _descriptionInput
         // 
         this._descriptionInput.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(34)))), ((int)(((byte)(58)))), ((int)(((byte)(76)))));
         this._descriptionInput.Font = new System.Drawing.Font("Tw Cen MT Condensed Extra Bold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
         this._descriptionInput.ForeColor = System.Drawing.Color.White;
-        this._descriptionInput.Location = new System.Drawing.Point(183, 333);
+        this._descriptionInput.Location = new System.Drawing.Point(183, 373);
         this._descriptionInput.Name = "_descriptionInput";
         this._descriptionInput.Size = new System.Drawing.Size(488, 163);
         this._descriptionInput.TabIndex = 10;
@@ -175,7 +178,41 @@ internal class MyGamesView : BaseMinimizeView
         this._label2.Name = "label2";
         this._label2.Size = new System.Drawing.Size(92, 22);
         this._label2.TabIndex = 8;
-        this._label2.Text = "Game Title:";
+        this._label2.Text = CurrentSessionController.Session.Language.GetString("GameTitle")! + ":";
+        // 
+        // _genreComboBox
+        // 
+        this._genreComboBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(34)))), ((int)(((byte)(51)))), ((int)(((byte)(72)))));
+        this._genreComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+        this._genreComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+        this._genreComboBox.Font = new System.Drawing.Font("Tw Cen MT Condensed Extra Bold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+        this._genreComboBox.ForeColor = System.Drawing.Color.White;
+        this._genreComboBox.FormattingEnabled = true;
+        this._genreComboBox.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+        this._genreComboBox.Items.AddRange(
+            Enum
+            .GetValues(typeof(GameGenre))
+            .Cast<GameGenre>()
+            .Select(x => x.ToString())
+            .ToArray()
+        );
+        this._genreComboBox.Text = CurrentSessionController.Session.CurrencyType.ToString();
+        this._genreComboBox.Location = new System.Drawing.Point(183, 301);
+        this._genreComboBox.Name = "_currencyComboBox";
+        this._genreComboBox.Size = new System.Drawing.Size(140, 28);
+        this._genreComboBox.TabIndex = 14;
+        this._genreComboBox.SelectedIndex = 0;
+        // 
+        // label5
+        // 
+        this._label5.AutoSize = true;
+        this._label5.Font = new System.Drawing.Font("Tw Cen MT Condensed Extra Bold", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+        this._label5.ForeColor = System.Drawing.Color.White;
+        this._label5.Location = new System.Drawing.Point(16, 304);
+        this._label5.Name = "label4";
+        this._label5.Size = new System.Drawing.Size(97, 22);
+        this._label5.TabIndex = 12;
+        this._label5.Text = CurrentSessionController.Session.Language.GetString("GameGenre")! + ":";
         // 
         // _changePictureButton
         // 
@@ -188,7 +225,7 @@ internal class MyGamesView : BaseMinimizeView
         this._changePictureButton.Name = "_changePictureButton";
         this._changePictureButton.Size = new System.Drawing.Size(104, 50);
         this._changePictureButton.TabIndex = 7;
-        this._changePictureButton.Text = "Change Picture";
+        this._changePictureButton.Text = CurrentSessionController.Session.Language.GetString("ChangePicture")!;
         this._changePictureButton.UseVisualStyleBackColor = false;
         this._changePictureButton.Click += _changePictureButton_Click;
         // 
@@ -228,6 +265,8 @@ internal class MyGamesView : BaseMinimizeView
         this._gameInfoPanel.Controls.Add(this._label2);
         this._gameInfoPanel.Controls.Add(this._changePictureButton);
         this._gameInfoPanel.Controls.Add(this._gameIcon);
+        this._gameInfoPanel.Controls.Add(this._label5);
+        this._gameInfoPanel.Controls.Add(this._genreComboBox);
         this._gameInfoPanel.Dock = System.Windows.Forms.DockStyle.Fill;
         this._gameInfoPanel.Location = new System.Drawing.Point(178, 0);
         this._gameInfoPanel.Name = "panel1";
@@ -239,6 +278,7 @@ internal class MyGamesView : BaseMinimizeView
         this.Controls.Add(this._addNewGameButton);
         this.Controls.Add(this._gameInfoPanel);
         this.Controls.Add(this._gamesListBox);
+        ((System.ComponentModel.ISupportInitialize)(this._priceInput)).EndInit();
         this._gameInfoPanel.ResumeLayout(false);
         this._gameInfoPanel.PerformLayout();
         this.ResumeLayout(false);
@@ -266,6 +306,7 @@ internal class MyGamesView : BaseMinimizeView
         string description = _descriptionInput.Text;
         Money price = new Money((_currencyComboBox.SelectedItem as string)!, _priceInput.Value);
         Image icon = _gameIcon.Image;
+        GameGenre genre = (GameGenre)Enum.Parse(typeof(GameGenre), _genreComboBox.SelectedItem.ToString()!, true);
 
         Result result;
 
@@ -277,6 +318,7 @@ internal class MyGamesView : BaseMinimizeView
                 {
                     title,
                     description,
+                    genre,
                     price,
                     icon
                 })
@@ -291,6 +333,7 @@ internal class MyGamesView : BaseMinimizeView
                     _userGames[selectedIndex].Id,
                     title,
                     description,
+                    genre,
                     price,
                     icon
                 })
@@ -326,10 +369,13 @@ internal class MyGamesView : BaseMinimizeView
         this._titleInput.Text = game.Title.Value;
         this._descriptionInput.Text = game.Description.Value;
 
-        this._priceInput.Text = game.Price.Amount.ToString();
-        this._currencyComboBox.Text = game.Price.Currency;
+        Money price = game.Price.ConvertTo(CurrentSessionController.Session.CurrencyType);
 
-        this._saveChangesButton.Text = "Save Changes";
+        this._priceInput.Text = price.Amount.ToString();
+        this._currencyComboBox.Text = price.Currency;
+        this._genreComboBox.Text = game.Genre.ToString();
+
+        this._saveChangesButton.Text = CurrentSessionController.Session.Language.GetString("SaveChanges")!;
     }
 
     private async void _addNewGameButton_Click(object? sender, EventArgs e)
@@ -345,9 +391,9 @@ internal class MyGamesView : BaseMinimizeView
         this._descriptionInput.ResetText();
 
         this._priceInput.Text = "0";
-        this._currencyComboBox.SelectedIndex = 0;
+        this._currencyComboBox.Text = CurrentSessionController.Session.CurrencyType.ToString();
 
-        this._saveChangesButton.Text = "Add Game";
+        this._saveChangesButton.Text = CurrentSessionController.Session.Language.GetString("AddGame")!;
     }
 
     private async Task FillGamesListBox()

@@ -1,10 +1,13 @@
 ﻿using CourseProject.Domain.Entities;
+using CourseProject.Domain.Enums;
 
 namespace CourseProject.Domain.Repositories;
 
 public interface IGameRepository
 {
     void Add(Game game);
+
+    public Task Update(Game oldGame, Game newGame, CancellationToken cancellationToken = default);
 
     Task<Game?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
@@ -19,7 +22,6 @@ public interface IGameRepository
         bool inAscendingOrder,
         int skip,
         int top,
+        List<GameGenre> genres,
         CancellationToken cancellationToken = default);
-
-    public Task UpdateGame(Game oldGame, Game newGame, CancellationToken cancellationToken = default);
 }

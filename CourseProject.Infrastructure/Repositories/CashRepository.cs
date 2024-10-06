@@ -24,6 +24,11 @@ internal class CashRepository : ICashRepository
         await _localStorage.WriteToCurrentUserFile(json);
     }
 
+    public async Task DeleteCashedUser()
+    {
+        await _localStorage.DeleteCurrentUserFile();
+    }
+
     public async Task<User?> GetUser()
     {
         bool fileExist = await _localStorage.CurrentUserFileEmptyOrDoNotExist();
@@ -99,5 +104,11 @@ internal class CashRepository : ICashRepository
     {
         await _localStorage.UploadGameIcon(iconName, icon);
         await _webStorage.UploadGameIcon(iconName);
+    }
+
+    public async Task UploadProfilePicture(string pictureName, Image picture)
+    {
+        await _localStorage.UploadProfilePicture(pictureName, picture);
+        await _webStorage.UploadProfilePicture(pictureName);
     }
 }

@@ -8,6 +8,8 @@ internal interface ILocalStorage
 
     Task<string> ReadFromCurrentUserFile();
 
+    Task DeleteCurrentUserFile();
+
     Task WriteToCurrentUserFile(string text);
 
     Task SaveDownloadedProfilePicture(string name);
@@ -23,4 +25,6 @@ internal interface ILocalStorage
     Task<Image?> GetDefaultImage();
 
     Task UploadGameIcon(string name, Image icon);
+
+    Task UploadProfilePicture(string name, Image profilePicture);
 }

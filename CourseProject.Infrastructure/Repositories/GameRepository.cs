@@ -1,7 +1,7 @@
 ﻿using CourseProject.Domain.Entities;
+using CourseProject.Domain.Enums;
 using CourseProject.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 
 namespace CourseProject.Infrastructure.Repositories;
 
@@ -17,6 +17,14 @@ internal class GameRepository : IGameRepository
     public void Add(Game game)
     {
         _dbContext.Games.Add(game);
+    }
+
+    public async Task Update(Game oldGame, Game newGame, CancellationToken cancellationToken = default)
+    {
+        await _dbContext
+            .Database
+            .ExecuteSqlAsync($"UPDATE [g] SET [g].[Description] = {newGame.Description.Value}, [g].[Title] = {newGame.Title.Value}, [g].[Price_Currency] = {newGame.Price.Currency}, [g].Genre = {newGame.Genre}, [g].[Price_Amount] = {newGame.Price.Amount} FROM [Games] AS [g] WHERE [g].[Id] = {oldGame.Id}",
+            cancellationToken);
     }
 
     public async Task<List<Game>> GetByAuthorIdAsync(Guid authorId, CancellationToken cancellationToken = default)
@@ -44,14 +52,6 @@ internal class GameRepository : IGameRepository
             .FirstOrDefaultAsync(g => g.Title == title, cancellationToken);
     }
 
-    public async Task UpdateGame(Game oldGame, Game newGame, CancellationToken cancellationToken = default)
-    {
-        await _dbContext
-            .Database
-            .ExecuteSqlAsync($"UPDATE [g] SET [g].[Description] = {newGame.Description.Value}, [g].[Title] = {newGame.Title.Value}, [g].[Price_Currency] = {newGame.Price.Currency}, [g].[Price_Amount] = {newGame.Price.Amount} FROM [Games] AS [g] WHERE [g].[Id] = {oldGame.Id}",
-            cancellationToken);
-    }
-
     public async Task<List<Game>> GetByTitleAndSortModifier(
             string title,
             Func<Game, bool> where,
@@ -59,12 +59,14 @@ internal class GameRepository : IGameRepository
             bool inAscendingOrder,
             int skip,
             int top,
+            List<GameGenre> genres,
             CancellationToken cancellationToken = default)
     {
         var query = _dbContext
             .Set<Game>()
             .AsNoTracking()
-            .Where(where);
+            .Where(where)
+            .Where(g => genres.Contains(g.Genre));
 
         IOrderedEnumerable<Game> orderedQuery;
         if (inAscendingOrder)

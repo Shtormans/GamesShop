@@ -4,6 +4,7 @@ using CourseProject.Infrastructure.Services;
 using CourseProject.UI.Abstractions;
 using CourseProject.UI.Controllers;
 using CourseProject.UI.Managers;
+using CourseProject.UI.Models;
 using CourseProject.UI.Views.Registration;
 using MediatR;
 using Microsoft.Extensions.Hosting;
@@ -16,6 +17,8 @@ internal class Startup
     private readonly IMainForm _form;
     private readonly ISender _sender;
 
+    private bool _keepOpen = true;
+
     public Startup(IServiceProvider services, IMainForm form, ISender sender)
     {
         _services = services;
@@ -25,15 +28,22 @@ internal class Startup
 
     public async Task Run()
     {
+        ((Form)_form).FormClosed += Startup_FormClosed;
+
         await StartForm();
 
         await ChooseView();
 
 
-        while (true)
+        while (_keepOpen)
         {
 
         }
+    }
+
+    private void Startup_FormClosed(object? sender, FormClosedEventArgs e)
+    {
+        _keepOpen = false;
     }
 
     private async Task StartForm()
@@ -56,7 +66,10 @@ internal class Startup
         }
         else
         {
-            CurrentSessionContoller.SetNewSession(userResult.Value);
+            CurrentSessionController.SetNewSession(new ChangeSessionModel()
+            {
+                User = userResult.Value
+            });
             await UIManager.Instance.ShowView(nameof(HomeController)).ConfigureAwait(false);
         }
     }

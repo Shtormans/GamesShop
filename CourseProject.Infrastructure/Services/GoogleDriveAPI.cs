@@ -12,20 +12,22 @@ internal class GoogleDriveAPI : IWebStorage
 
     private readonly GoogleCredential _googleCredential;
     private readonly string _defaultPictureName;
+    private readonly string _downloadedImagePath;
     private readonly string _mainFolderPath;
     private readonly string _gameImagesFolderPath;
     private readonly string _profileImagesFolderPath;
-    private readonly string _downloadedImagePath;
     private readonly string _gameImagesLocalPath;
+    private readonly string _profileImagesLocalPath;
 
     public GoogleDriveAPI(IConfiguration configuration)
     {
         _defaultPictureName = configuration.GetConnectionString("DefaultPictureName")!;
+        _downloadedImagePath = configuration.GetConnectionString("DownloadedImagePath")!;
         _mainFolderPath = configuration.GetConnectionString("GoogleMainFolderPath")!;
         _gameImagesFolderPath = configuration.GetConnectionString("GoogleGameImages")!;
         _profileImagesFolderPath = configuration.GetConnectionString("GoogleUserImages")!;
-        _downloadedImagePath = configuration.GetConnectionString("DownloadedImagePath")!;
         _gameImagesLocalPath = configuration.GetConnectionString("GameImages")!;
+        _profileImagesLocalPath = configuration.GetConnectionString("UserImages")!;
 
         var googleCredentialFilePath = configuration.GetConnectionString("GoogleCredentials")!;
 
@@ -120,6 +122,30 @@ internal class GoogleDriveAPI : IWebStorage
         {
             Name = $"{imageName}.{ImageType}",
             Parents = new List<string>() { _gameImagesFolderPath }
+        };
+
+        await using (var uploadStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+        {
+            var request = service.Files.Create(newFileBody, uploadStream, "image/jpeg");
+            request.Fields = "*";
+            var result = request.Upload();
+        }
+
+        service.Dispose();
+    }
+
+    public async Task UploadProfilePicture(string imageName)
+    {
+        var service = new DriveService(new BaseClientService.Initializer()
+        {
+            HttpClientInitializer = _googleCredential
+        });
+
+        string path = $"{Path.Combine(_profileImagesLocalPath, imageName)}.{ImageType}";
+        var newFileBody = new Google.Apis.Drive.v3.Data.File()
+        {
+            Name = $"{imageName}.{ImageType}",
+            Parents = new List<string>() { _profileImagesFolderPath }
         };
 
         await using (var uploadStream = new FileStream(path, FileMode.Open, FileAccess.Read))

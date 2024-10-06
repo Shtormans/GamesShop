@@ -7,6 +7,8 @@ public interface ICashRepository
 {
     Task CashUser(User user);
 
+    Task DeleteCashedUser();
+
     Task<User?> GetUser();
 
     Task<Image> GetProfilePicture(string name);
@@ -16,4 +18,6 @@ public interface ICashRepository
     Task<Image> GetDefaultPicture();
 
     Task UploadGameIcon(string iconName, Image icon);
+
+    Task UploadProfilePicture(string pictureName, Image picture);
 }

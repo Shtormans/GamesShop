@@ -17,7 +17,7 @@ internal class LoginView : BaseFullScreenView
     private Label _label3;
     private LinkLabel _registrationLink;
 
-    public LoginView(ViewBag viewbag) 
+    public LoginView(ViewBag viewbag)
         : base(viewbag)
     {
     }
@@ -43,7 +43,7 @@ internal class LoginView : BaseFullScreenView
         this._label1.Name = "label1";
         this._label1.Size = new System.Drawing.Size(228, 20);
         this._label1.TabIndex = 0;
-        this._label1.Text = "SIGN IN WITH EMAIL OR USERNAME";
+        this._label1.Text = CurrentSessionController.Session.Language.GetString("SignInWithEmailOrUsername")!.ToUpper();
         // 
         // UsernameInput
         // 
@@ -66,6 +66,7 @@ internal class LoginView : BaseFullScreenView
         this._passwordInput.Name = "PasswordInput";
         this._passwordInput.Size = new System.Drawing.Size(347, 23);
         this._passwordInput.TabIndex = 3;
+        this._passwordInput.PasswordChar = '*';
         // 
         // label2
         // 
@@ -76,7 +77,7 @@ internal class LoginView : BaseFullScreenView
         this._label2.Name = "label2";
         this._label2.Size = new System.Drawing.Size(78, 20);
         this._label2.TabIndex = 2;
-        this._label2.Text = "PASSWORD";
+        this._label2.Text = CurrentSessionController.Session.Language.GetString("Password")!.ToUpper();
         // 
         // RememberMeCheckBox
         // 
@@ -87,7 +88,7 @@ internal class LoginView : BaseFullScreenView
         this._rememberMeCheckBox.Name = "RememberMeCheckBox";
         this._rememberMeCheckBox.Size = new System.Drawing.Size(127, 23);
         this._rememberMeCheckBox.TabIndex = 4;
-        this._rememberMeCheckBox.Text = "Remember me";
+        this._rememberMeCheckBox.Text = CurrentSessionController.Session.Language.GetString("RememberMe")!;
         this._rememberMeCheckBox.UseVisualStyleBackColor = true;
         // 
         // SignInButton
@@ -101,7 +102,7 @@ internal class LoginView : BaseFullScreenView
         this._signInButton.Name = "SignInButton";
         this._signInButton.Size = new System.Drawing.Size(253, 45);
         this._signInButton.TabIndex = 5;
-        this._signInButton.Text = "Sign in";
+        this._signInButton.Text = CurrentSessionController.Session.Language.GetString("SignIn")!;
         this._signInButton.UseVisualStyleBackColor = false;
         this._signInButton.Click += SignInButton_Click;
         // 
@@ -114,7 +115,7 @@ internal class LoginView : BaseFullScreenView
         this._label3.Name = "label3";
         this._label3.Size = new System.Drawing.Size(146, 19);
         this._label3.TabIndex = 6;
-        this._label3.Text = "Don\'t have account ?";
+        this._label3.Text = CurrentSessionController.Session.Language.GetString("DontHaveAccount")!;
         // 
         // label4
         // 
@@ -127,7 +128,7 @@ internal class LoginView : BaseFullScreenView
         this._registrationLink.Name = "label4";
         this._registrationLink.Size = new System.Drawing.Size(156, 19);
         this._registrationLink.TabIndex = 7;
-        this._registrationLink.Text = "Create a Free Account";
+        this._registrationLink.Text = CurrentSessionController.Session.Language.GetString("CreateAFreeAccount")!;
         this._registrationLink.LinkClicked += RegistrationLink_LinkClicked;
         // 
         // TestForm
@@ -150,9 +151,10 @@ internal class LoginView : BaseFullScreenView
     {
         string emailOrUsername = _usernameInput.Text;
         string password = _passwordInput.Text;
+        bool rememberMe = _rememberMeCheckBox.Checked;
 
         var result = await UIManager.Instance
-            .UseMethodAsync(nameof(LoginController), "LoginUser", new[] {emailOrUsername, password})
+            .UseMethodAsync(nameof(LoginController), "LoginUser", new object[] { emailOrUsername, password, rememberMe })
             as Result;
 
         if (result!.IsFailure)

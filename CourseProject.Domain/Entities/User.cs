@@ -1,5 +1,4 @@
 ﻿using CourseProject.Domain.Primitives;
-using CourseProject.Domain.ValueObjects.Identificators;
 using CourseProject.Domain.ValueObjects.User;
 using Newtonsoft.Json;
 
@@ -61,5 +60,25 @@ public sealed class User : Entity
         };
 
         return user;
+    }
+
+    public void AddFriend(User friend)
+    {
+        if (_friends is null)
+        {
+            _friends = new();
+        }
+
+        _friends.Add(friend);
+    }
+
+    public void BuyGame(Game game)
+    {
+        if (_library is null)
+        {
+            _library = new();
+        }
+
+        _library.Add(game);
     }
 }

@@ -1,6 +1,5 @@
 ﻿using CourseProject.Domain.Primitives;
 using CourseProject.Domain.Shared;
-using System.Drawing;
 
 namespace CourseProject.Domain.ValueObjects.Game;
 

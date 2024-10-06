@@ -45,6 +45,19 @@ internal sealed class UIManager
         await _mainForm.WaitCursor(false);
     }
 
+    public async Task<BaseView> GetView(string controllerName, string methodName = "Index", object?[]? parameters = null)
+    {
+        await _mainForm.WaitCursor(true);
+
+        object? result = await UseMethodAsync(controllerName, methodName, parameters);
+
+        var view = (BaseView)result!;
+
+        await _mainForm.WaitCursor(false);
+
+        return view;
+    }
+
     public async Task<object?> UseMethodAsync(string controllerName, string methodName, object?[]? parameters = null)
     {
         var controller = _controllers[controllerName];

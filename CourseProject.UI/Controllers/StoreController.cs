@@ -16,9 +16,9 @@ internal class StoreController : BaseController
     {
     }
 
-    public async Task<List<GameModelWithImage>> GetNextGames(string title, SortGamesBy sortGamesBy, int skip)
+    public async Task<List<GameModelWithImage>> GetNextGames(string title, SortGamesBy sortGamesBy, int skip, List<GameGenre> genres)
     {
-        var storeQuery = new GetGamesByTitleAndSortModifierQuery(title, sortGamesBy, (uint)skip, TopAmount);
+        var storeQuery = new GetGamesByTitleAndSortModifierQuery(title, sortGamesBy, (uint)skip, TopAmount, genres);
         var games = await Sender.Send(storeQuery);
 
         var gameIconsQuery = new GetGameIconsQuery(games.Value.Select(game => game.Image).ToList());

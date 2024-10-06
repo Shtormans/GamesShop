@@ -9,21 +9,21 @@ internal class LocalFilesStorage : ILocalStorage
 {
     public const string ImageType = "jpeg";
 
+    private readonly string _downloadedImagePath;
+    private readonly string _defaultPictureName;
     private readonly string _cashedFolderPath;
     private readonly string _currentProfileFilePath;
     private readonly string _gameImagesFolderPath;
     private readonly string _profileImagesFolderPath;
-    private readonly string _defaultPictureName;
-    private readonly string _downloadedImagePath;
 
     public LocalFilesStorage(IConfiguration configuration)
     {
+        _downloadedImagePath = configuration.GetConnectionString("DownloadedImagePath")!;
+        _defaultPictureName = configuration.GetConnectionString("DefaultPictureName")!;
         _cashedFolderPath = configuration.GetConnectionString("CashedFolderPath")!;
         _currentProfileFilePath = configuration.GetConnectionString("UserCashFile")!;
         _gameImagesFolderPath = configuration.GetConnectionString("GameImages")!;
         _profileImagesFolderPath = configuration.GetConnectionString("UserImages")!;
-        _defaultPictureName = configuration.GetConnectionString("DefaultPictureName")!;
-        _downloadedImagePath = configuration.GetConnectionString("DownloadedImagePath")!;
 
         CheckAllPaths();
     }
@@ -66,6 +66,16 @@ internal class LocalFilesStorage : ILocalStorage
     public async Task<string> ReadFromCurrentUserFile()
     {
         return File.ReadAllText(_currentProfileFilePath);
+    }
+
+    public async Task DeleteCurrentUserFile()
+    {
+        bool fileExist = File.Exists(_currentProfileFilePath);
+
+        if (fileExist)
+        {
+            File.Delete(_currentProfileFilePath);
+        }
     }
 
     public async Task WriteToCurrentUserFile(string text)
@@ -145,5 +155,16 @@ internal class LocalFilesStorage : ILocalStorage
         }
 
         icon.Save(path, ImageFormat.Jpeg);
+    }
+
+    public async Task UploadProfilePicture(string name, Image profilePicture)
+    {
+        string path = $"{Path.Combine(_profileImagesFolderPath, name)}.{ImageType}";
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+        }
+
+        profilePicture.Save(path, ImageFormat.Jpeg);
     }
 }

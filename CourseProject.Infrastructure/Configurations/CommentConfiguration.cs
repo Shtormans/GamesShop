@@ -21,7 +21,7 @@ internal class CommentConfiguration : IEntityTypeConfiguration<Comment>
 
         builder.Property(comment => comment.CreationDate).HasConversion(
             creationDate => creationDate.DateInUTC,
-            value => CommentCreationDate.Create(value).Value)
+            value => CommentCreationDate.Create(DateTime.SpecifyKind(value, DateTimeKind.Utc)).Value)
             .IsRequired();
     }
 }

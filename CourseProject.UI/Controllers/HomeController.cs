@@ -1,8 +1,4 @@
-﻿using CourseProject.Application.Games.Queries.GetGamesByTitleAndSortModifier;
-using CourseProject.Application.Images.Queries;
-using CourseProject.Application.Images.Queries.GetGameIcons;
-using CourseProject.Application.Users.Queries.GetCurrentUser;
-using CourseProject.Domain.Enums;
+﻿using CourseProject.Application.Images.Queries;
 using CourseProject.UI.Abstractions;
 using CourseProject.UI.Managers;
 using CourseProject.UI.StaticData;
@@ -25,11 +21,8 @@ internal class HomeController : BaseController
                 ScreenSize = Sizes.HomeScreenSize
             });
 
-        var query = new GetCurrentUserQuery();
 
-        var userResult = await Sender.Send(query);
-        var user = userResult.Value;
-        CurrentSessionContoller.SetNewSession(user);
+        var user = CurrentSessionController.Session.User;
 
         var pictureQuery = new GetProfilePictureQuery(user.ProfilePicture);
         var pictureResult = await Sender.Send(pictureQuery).ConfigureAwait(false);

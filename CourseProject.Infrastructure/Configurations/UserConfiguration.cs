@@ -43,7 +43,7 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(user => user.Birthday).HasConversion(
             birthday => birthday.DateInUTC,
-            value => UserBirthday.Create(value).Value)
+            value => UserBirthday.Create(DateTime.SpecifyKind(value, DateTimeKind.Utc)).Value)
             .IsRequired();
 
         builder.Property(user => user.ProfilePicture).HasConversion(
